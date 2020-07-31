@@ -64,11 +64,68 @@ arr1.push.apply(arr1,arr2);
 // Array.prototype.push.apply(arr1, arr2);
 console.log(arr1);
 
+// 类数组用数组原型的方法
+function sumOnlyNumber() {
+    var args = arguments;//类数组
+    var numbers = filterNumber();
+    return numbers.reduce((sum,element) => sum + element);
+    
+    function filterNumber(){
+        // 类数组args使用filter方法
+        return Array.prototype.filter.call(
+            args,
+            element => typeof element === 'number'
+        );
+    }
+}
+console.log(sumOnlyNumber(1, "hello", 5, false));
 
 // 2 js实现
+// 2.1 只用ES6实现
+// 优点：可以使用const、...操作符，代码简洁
+// 缺点：不兼容IE
+// (1) 定义
+var myBind_1 = function(asThis, ...args) {
+    // ...args剩余数组,把不定数量的参数表示为一个数组args
+    // 这里的args = [[param1,param2]]
+    // 所以...args = [param1,param2]
+    const fn = this;
+    return function(...arg2){
+        return fn.apply(asThis, ...args, ...arg2);
+        // ...args,...arg2 解构赋值
+    }
+}
+// (2) 在函数Funtion的原型上添加方法
+Function.prototype.myBind_1 = myBind_1;
+// (3) 使用
+var myEatFishFun_1 = cat.eatFish.myBind_1(dog, ["小黄","myBind_1"]);
+myEatFishFun_1();
 
+// 2.2 使用ES5实现(即不用const和...)
+// 优点：兼容IE
+// 缺点：参数要用Array.prorotypr.slice取，复杂且不支持new
+// (1) 定义
+var myBind_2 = function bind_2 (asThis) {
+    // args为bind_2参数类数组argument的第二位往后所有
+    // argument是类数组不能直接使用slice方法，需要call绑定
+    var slice = Array.prototype.slice;
+    var args = slice.call(arguments,1,2)[0].concat(slice.call(arguments,2));
+    // console.log(args);
+    var fn = this;
+    return function() {
+        var args2 = Array.prototype.slice.call(arguments,0);
+        // console.log(args.concat(args2));
+        return fn.apply(asThis, args.concat(args2));
+        // args.concat(args2)返回新数组，args与args2本身不变，相当于[...args, args2]
+    };
+}
+// (2) 在函数Funtion的原型上添加方法
+Function.prototype.myBind_2 = myBind_2;
+// (3) 使用
+var myEatFishFun_2 = cat.eatFish.myBind_2(dog, ["小黄","myBind_2"]);
+myEatFishFun_2();
 
-
+  
 // 参考：https://blog.csdn.net/u010176097/article/details/80348447
 // 参考：https://segmentfault.com/a/1190000018017796
 // 参考：https://zhuanlan.zhihu.com/p/160315811
