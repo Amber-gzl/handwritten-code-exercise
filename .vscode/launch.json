@@ -16,7 +16,7 @@
             "type": "node",
             "request": "launch",
             "name": "Mocha Tests",
-            "program": "${workspaceFolder}/myBind.js",
+            "program": "${workspaceFolder}/02myCall.js",
             "skipFiles": [
                 "<node_internals>/**"
             ]
