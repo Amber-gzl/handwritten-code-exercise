@@ -94,9 +94,10 @@ var myBind_1 = function(asThis, ...args) {
         return fn.apply(asThis, ...args, ...arg2);
         // ...args,...arg2 解构赋值
     }
-}
+};
 // (2) 在函数Funtion的原型上添加方法
 Function.prototype.myBind_1 = myBind_1;
+// Function.prototype.myBind_1 = function(){...}；
 // (3) 使用
 var myEatFishFun_1 = cat.eatFish.myBind_1(dog, ["小黄","myBind_1"]);
 myEatFishFun_1();
